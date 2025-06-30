@@ -326,7 +326,7 @@ Let's suppose our repo
 
 And we want to restore the repo to the C2 commit using the following commands:
 ```bash
-$ git rm -rf *
+$ git rm -rf .         # includes hidden files (e.g., .gitignore, .env, etc.)
 $ git checkout C2 . #note the dot at the end of git checkout
 $ git commit -m 'Restore to C2'
 ```
