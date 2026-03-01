@@ -33,9 +33,9 @@
 
 This document wants to be a reference for best practices in the daily use of Git, despite the complexity of this tool it is worth mentioning that Git is a tool that tracks the changes in a repository (which is basically a directory containing a .git folder that has all the needed metadata to achieve file tracking).
 
-Some concepts are stressed by the author for a simple reason: the main goal of Git is tracking the changes and years of experience have shown that Git is very good at that. However, this is not for free, it requires some attention by Individual Contributors (the engineers who commit changes, henceforth referred to as IC).
+Some concepts are stressed by the author for a simple reason: The main goal of Git is tracking the changes and years of experience have shown that Git is very good at that. However, this is not for free, it requires some attention by Individual Contributors (the engineers who commit changes, henceforth referred to as IC).
 
-The history of a Git repository shows all the contributions and if ICs don’t follow some simple rules, it can easily turn into a mess, in fact losing the primary goal: tracking changes effectively.
+The history of a Git repository shows all the contributions and if ICs don’t follow some simple rules, it can easily turn into a mess, losing the primary goal: Tracking changes effectively.
 
 Moreover, having a good history allows for some tasks, like understanding what happened, learning how to implement something and helping the reviewers with Pull Requests.
 
@@ -45,16 +45,16 @@ This document is divided into items, which are designed to explain the pros and 
 
 To get the best out of this guide a little knowledge of command line tools is needed (also Git) so the reader, who is not proficient with those is strongly invited to read [https://git-scm.com/book/en/v2](https://git-scm.com/book/en/v2) (especially the chapters 1. Getting Started, 2. Git Basics, and Git Branching).
 
-Three categories are presented: basic, intermediate and advanced, while the first two show safe practices the last one shows how to rewrite the history, which is forbidden when the branch is shared with other ICs but it can be safe when working alone (e. g. local branches).
+Three categories are presented: Basic, intermediate and advanced, while the first two show safe practices the last one shows how to rewrite the history, which is forbidden when the branch is shared with other ICs but it can be safe when working alone (e. g. local branches).
 
 
 ## Basic items
 
-A very quick introduction to how a Git repo works: code contributions are grouped into commits, but what is a commit? It is just a patch https://en.wikipedia.org/wiki/Patch_(computing) whose hash function (currently sha1sum but with ongoing discussions to upgrade it) is referred to as the commit ID.
+A very quick introduction to how a Git repo works: Code contributions are grouped into commits, but what is a commit? It is just a patch https://en.wikipedia.org/wiki/Patch_(computing) whose hash function (currently sha1sum but with ongoing discussions to upgrade it) is referred to as the commit ID.
 
-The history can be seen as a series of commit IDs, each of them brings changes to the source code: this structure is clear and safe to all its users and guarantees a strict policy against unwanted changes.
+The history can be seen as a series of commit IDs, each of them brings changes to the source code: This structure is clear and safe to all its users and guarantees a strict policy against unwanted changes.
 
-A branch is a reference to a specific commit ID and therefore to all its ancestor commits. ICs are free to decide whether to tag or not a specific commit (usually for tracking the release version).
+A branch is a reference to a specific commit ID and therefore to all its ancestor commits. ICs are free to decide whether to tag or not a specific commit (usually for tracking a release version).
 ![Scheme](images/simplerepo.png)
 
 
@@ -115,7 +115,7 @@ $ git merge origin/develop
 The command git pull is a shorthand for git fetch && git merge origin/develop -> see item 3 for insights on git fetch
 
 ### Item 2: how to commit: git commit
-When all the changes are steady and the tests have passed (e.g., mvn clean install is OK), It is time to stage the changes, to do that
+When all the changes are steady and the tests have passed (e.g., mvn clean install is OK), it is time to stage the changes, to do that
 ```bash
 $ git add -p
 ```
@@ -129,7 +129,7 @@ A well formatted commit message should contain:
 - A brief summary of the changes that occurred and meaningful comments for helping future reviews
 
 ### Item 3: references update: git fetch
-Since Git is a distributed version control this means that more copies of the same repository could exist(ideally one for IC plus one as central). One of them will be considered as the central repository (the one called origin), therefore the repo contains references to both local and remote branches; in order to update local references to the remote branch you need to use git fetch:
+Since Git is a distributed version control this means that more copies of the same repository could exist (ideally one for IC plus one as central). One of them will be considered as the central repository (the one called origin), therefore the repo contains references to both local and remote branches; in order to update local references to the remote branch you need to use git fetch:
 ```bash
 $ git fetch
 ~/repos/testrepo$ git fetch
@@ -142,11 +142,11 @@ From https://foobar.com.com/scm/path/testrepo
    1ffa340..71b62d8  feature/feature1-develop -> origin/feature1-develop
    e59d286..e3ffe3c  feature/feature2-develop -> origin/feature2-develop
 ```
-It is worth pointing out that fetch doesn't update nothing, only the references get updated: it is always safe to run git fetch.
+It is worth pointing out that fetch doesn't update the tracked files, only the references get updated. It is always safe to run git fetch.
 In the above example we noticed that two branches received updates in the syntax: oldsha..newsha localbranch -> remote tracked branch
 
 ### Item 4: differences between references
-Anytime you can check on the differences between the two references using git diff, remember that a Git reference could be a TAG, a commit ID or a branch name
+Anytime you can check on the differences between two references using git diff, remember that a Git reference can be a TAG, a commit ID or a branch name
 
 ```bash
 $ git fetch
@@ -155,7 +155,7 @@ $ git diff HEAD 1.0.0 # show differences between local branch and tag 1.0.0
 $ git diff develop origin/develop # show differences between local branch and tag 1.0.0
 $ git diff develop origin/master # show differences between local branch and remote master
 ```
-The output format is the one used by Patch:
+The output uses the *Unified Diff Format* (also supported by standard programs diff and patch):
 ```bash
 ~/repos/gitcourse$ git diff 008323949d8fe0af977af8980e5f3c0d9d0c6b07 f2de6c316b2ad361ede73461d25c260642e87108
 diff --git a/README.md b/README.md
@@ -170,45 +170,45 @@ index 5e8fe7e..c101e79 100644
 +- git reset <commit>
 ```
 ### Item 5: keep safe your contributions
-Let's suppose you are working on a long task which could take one/two weeks or even more, there are a bunch of reasons to commit and push very often:
+Let's suppose that you are working on a long term task that could take several weeks to be done, there are a bunch of reasons to commit and push very often:
 - To prevent loosing your work in case of PC failures
-- It is easy sharing contributions between ICs
+- It is easier to share contributions between ICs
 - The reviewers can get on with the work
-- Safely pause a task, switch on another activity to resume it later
+- Safely pause a task, switch to another, resume it later
 
 ## Intermediate items
 
 ### Item 6: the simplest Git workflow: feature branch
-Supposedly we are asked to work on a feature named find button, so we need to checkout a branch from the mainline
+Let's say that we are asked to work on a new feature called "find button", and that our staring point is the current state of the "develop" branch:
 ```bash
 $ git checkout develop
-$ git pull #just to be sure that our branch is updated with remote
-$ git checkout -b feature-findbutton # create feature branch
-$ git push --set-upstream origin feature-findbutton # push branch to remote
+$ git pull # just to be sure that our branch is updated with remote
+$ git checkout -b feature-findbutton # create our feature branch
+$ git push --set-upstream origin feature-findbutton # push our newly created branch to remote
 ```
 Implementing the feature day 1
 ```bash
-$ git fetch && git merge origin/develop # take contributions from mainline and fix conflicts
-$ vim file1 #edit file
-$ git commit -am 'C1'
-$ git push origin feature-findbutton
+$ git fetch && git merge origin/develop # take contributions done by other developers from mainline and fix conflicts
+$ vim file1 # edit file
+$ git commit -am 'C1' # commit our changes
+$ git push origin feature-findbutton # push our changes so interesed parties can start reviewing our work
 ```
 
 Implementing the feature day N
 ```bash
-$ git fetch && git merge origin/develop # take contributions from mainline and fix conflicts
-$ vim file1 #edit file
+$ git fetch && git merge origin/develop
+$ vim file1
 $ git commit -am 'CN'
 $ git push origin feature-findbutton
 ```
-And finally when the feature is ready (optional)
+And finally, when the feature is ready (optional)
 ```bash
 $ git checkout develop
-$ git merge --squash --ff-only feature-findbutton
+$ git merge --squash --ff-only feature-findbutton # merge our changes into the branch 'develop'
 $ git commit -m 'Merge pull request #feature-findbutton'
-$ git push origin develop
+$ git push origin develop # push the new changes made to the develop branch
 ```
-The last bunch of commands were tagged optional because using Pull Request on bitbucket/github/gitlab needs the approval from reviewers and only when accepted, a merge button will come on to the UI, which replaces all the previous git commands.
+The previous commands are not necessary when working with the *Pull Request* feature available in tools like bitbucket, github, gitlab, and others. In this case one ore more reviewers must accept the changes before those can (almost automatically) be integrated into the development branch.
 
 ### Item 7: my push was rejected, what can I do?
 
@@ -227,9 +227,9 @@ as usual Git is telling us why the updates were rejected
 
 ![Scheme](images/conflict1.png)
 
-Some ICs pushed to remote the commit C3 and now we are trying to push the commit C4. The remote repository is expecting to also have the changes that C3 brought in before.
-In this case we have two options available: we can follow what Git suggests us (see above) or we can use the Git rebase command.
-The main difference between the two actions is that using Git merge brings to the tree the merge commit which represents how the merge was done (sometimes it is done just for tracking purpose)
+Another IC pushed to remote the commit C3 and now we are trying to push our commit C4. The remote repository is expecting to also have the changes that C3 brought in before.
+In this case we have two options: We can follow what Git suggests (see above) or we can use the Git rebase command.
+The main difference between these two actions is that Git merge brings to the tree a merge commit which represents how the merge was done (sometimes it is done just for tracking purposes)
 
 #### Pull approach
 ```bash
@@ -247,10 +247,10 @@ $ git push
 ```
 ![Scheme](images/conflict3.png)
 
-Unlike the merging strategy, rebasing rewrites the current history putting on top our commit. The previously introduced commit will be rehashed, resulting in a history change.
+Unlike merge, a rebase rewrites the current history putting our commit as the last commit. Any previous commit will be rehashed, resulting in a history change.
 
 ### Item 8: a dry run approach to git merge
-Sometimes you would want to check on the side effects of a merge, without actually making it. This could be achieved by creating a temporary branch and merging it for testing purpose only. Whenever you push this branch remotely, you could share it with other ICs.
+Sometimes you would want to check the results of a merge without actually doing it. This can be achieved by creating a temporary branch and merging it for testing purpose only. If you push this branch remotely, you can share it with other ICs.
 
 Suppose the target branch is develop and the feature branch is feature1
 
@@ -266,11 +266,11 @@ Once the merge is done, the resulting outcome will be:
 $ git checkout develop
 $ git checkout merge develop-try-merge
 ```
-Even though this approach might appear complex, just consider this use case: you are in the middle of merge (taking something like 2 days) using this strategy, you can pause this task anytime to do something else (e.g. facing a production issue) and you could resume it later on.
+Even though this approach might appear complex, just consider this use case: You are in the middle of a long term merge that requires 2 days to complete, by using this strategy, you can pause the merging task at anytime, do something else (e.g. facing a production issue), and resume the merging task later.
 
 ### Item 9: how to approach conflicts
-Merging and rebasing might cause some issues, such as conflicts. In brief, it means that two commits are changing the same line, and Git was not able to merge them applying the default merge strategy, so it is asking the IC to manually solve the conflict.
-Again, we could take advantage of the git status command to list the files affected by conflicts. Once all the conflicts are resolved, we might proceed compiling and testing the resulting source code.
+Sometimes merging and rebasing end up with conflicts, meaning that two commits are trying to change the same line and Git is not able to merge them properly (by applying the default merge strategy), so it is asking the IC to manually solve the conflict.
+Again, we can use the git status command to list the files affected by conflicts. Once all the conflicts are resolved, we might proceed compiling and testing the resulting source code.
 ```bash
 ~/repos/testrepo$ git pull
 Auto-merging Minor fix
@@ -316,7 +316,7 @@ $ git commit
 ```
 
 ### Item 10: why sometimes fast-forward is better
-The picture below explains why we chose a fast forward merge strategy when a feature branch is going to be merged into mainline develop. If the feature branch is merged with step 6 then all the contributions contained in feature1 were not tested against what c4 has brought. To prevent that one, step 7 is the right approach in fact feature1 can be merged only if no new contributions are committed in develop since the last merge of develop into feature1
+The picture below depicts why we chose a fast forward merge strategy when a feature branch is going to be merged into mainline develop. If the feature branch is merged with step 6 then all the contributions contained in feature1 were not tested against what C4 has brought. To prevent that one, step 7 is the right approach in fact feature1 can be merged only if no new contributions are committed in develop since the last merge of develop into feature1
 
 ![Scheme](images/devsvil.png)
 
