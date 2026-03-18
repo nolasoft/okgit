@@ -50,7 +50,7 @@ Three categories are presented: Basic, intermediate and advanced, while the firs
 
 ## Basic items
 
-A very quick introduction to how a Git repo works: Code contributions are grouped into commits, but what is a commit? It is just a patch https://en.wikipedia.org/wiki/Patch_(computing) whose hash function (currently sha1sum but with ongoing discussions to upgrade it) is referred to as the commit ID.
+A very quick introduction to how a Git repo works: Code contributions are grouped into commits, and usually contributions are presented as patches, which show the changes — that is, what is effectively modified. Each commit is identified by its commit ID, which is the hash value (currently SHA-1, with ongoing discussions to replace it) of the corresponding patch https://en.wikipedia.org/wiki/Patch_(computing).
 
 The history can be seen as a series of commit IDs, each of them brings changes to the source code: This structure is clear and safe to all its users and guarantees a strict policy against unwanted changes.
 
